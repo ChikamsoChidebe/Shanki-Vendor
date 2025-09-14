@@ -18,6 +18,7 @@
     "tailwindcss": "^3.1.8"
   },
   "scripts": {
+    "preinstall": "chmod +x node_modules/.bin/* || true",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
