@@ -17,18 +17,20 @@ const Home = () => {
   const fetchFeaturedProducts = async () => {
     try {
       const res = await axios.get('/api/products?limit=8&sortBy=rating.average');
-      setFeaturedProducts(res.data.products);
+      setFeaturedProducts(res.data.products || []);
     } catch (error) {
       console.error('Error fetching featured products:', error);
+      setFeaturedProducts([]);
     }
   };
 
   const fetchCategories = async () => {
     try {
       const res = await axios.get('/api/products/categories');
-      setCategories(res.data.slice(0, 6));
+      setCategories(Array.isArray(res.data) ? res.data.slice(0, 6) : []);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]);
     }
   };
 
@@ -197,7 +199,7 @@ const Home = () => {
             <p className="text-secondary-600">Discover products across various categories</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {categories.map((category, index) => (
+            {Array.isArray(categories) && categories.map((category, index) => (
               <Link
                 key={index}
                 to={`/products?category=${category}`}
@@ -226,11 +228,11 @@ const Home = () => {
             </Link>
           </div>
           <div className="product-grid">
-            {featuredProducts.map((product) => (
+            {Array.isArray(featuredProducts) && featuredProducts.map((product) => (
               <div key={product._id} className="card-hover">
                 <div className="aspect-w-1 aspect-h-1 bg-secondary-200 rounded-t-lg overflow-hidden">
                   <img
-                    src={product.images[0] || '/placeholder-product.jpg'}
+                    src={product.images?.[0] || '/placeholder-product.jpg'}
                     alt={product.name}
                     className="w-full h-48 object-cover"
                   />
